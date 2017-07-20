@@ -1,5 +1,9 @@
 set(UNIT_TESTS unit_tests)
-add_executable(${UNIT_TESTS} testLastIndexOf.cpp)
+add_executable(
+    ${UNIT_TESTS}
+    testLastIndexOf.cpp
+    testHasStreamOperators.cpp
+)
 target_link_libraries(
     ${UNIT_TESTS}
     PRIVATE ${CUSER}
