@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 
 namespace cuser {
 
@@ -12,8 +13,15 @@ public: // types
 
     bool isNull() const;
     bool isString() const;
+    bool isBool() const;
+    bool isInteger() const;
+    bool isFloat() const;
 
     void getValue(std::string& str) const;
+
+    template <typename T>
+    typename std::enable_if<std::is_arithmetic<T>::value>::type getValue(
+        T& value) const;
 };
 
 template <typename Document>
@@ -23,6 +31,9 @@ public: // types
     OutDOM(Document& doc);
 
     void setValue(std::string str);
+    template <typename T>
+    typename std::enable_if<std::is_arithmetic<T>::value>::type setValue(
+        T value);
 };
 
 } // namespace cuser

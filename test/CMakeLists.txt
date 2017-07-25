@@ -5,6 +5,7 @@ add_executable(
     testHasStreamOperators.cpp
 
     testIOStreamSerializer.cpp
+    testFloatSerializer.cpp
 )
 target_link_libraries(
     ${UNIT_TESTS}

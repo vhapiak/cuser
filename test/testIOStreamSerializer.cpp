@@ -64,7 +64,7 @@ std::ostream& operator<<(std::ostream& out, const Fail&)
 TEST(IOStreamSerializerTest, serializeObject)
 {
     const Color input = {1, 2, 3, 4};
-    const test::DOMData expectedData("1,2,3,4");
+    const test::DOMData expectedData(std::string("1,2,3,4"));
 
     detail::Serializer<detail::IOStreamSerializer> serializer;
 
