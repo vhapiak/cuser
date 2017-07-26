@@ -1,9 +1,11 @@
 #pragma once
 
 #include <cassert>
+#include <initializer_list>
 #include <limits>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 namespace cuser {
 namespace test {
@@ -35,21 +37,30 @@ public: // methods
         setFloat(d);
     }
 
+    explicit DOMData(std::initializer_list<DOMData> l);
+
     bool isNull() const;
     bool isString() const;
     bool isBool() const;
     bool isInteger() const;
     bool isFloat() const;
+    bool isArray() const;
 
     std::string getString() const;
     bool getBool() const;
     int64_t getInteger() const;
     long double getFloat() const;
 
+    std::size_t size() const;
+    const DOMData& operator[](std::size_t idx) const;
+
     void setString(std::string str);
     void setBool(bool f);
     void setIntger(int64_t i);
     void setFloat(long double d);
+
+    void setArray(std::size_t size);
+    DOMData& push();
 
     bool operator==(const DOMData& data) const;
 
@@ -61,6 +72,7 @@ private: // types
         Bool,
         Integer,
         Float,
+        Array,
     };
 
 private: // fields
@@ -70,6 +82,7 @@ private: // fields
     bool mBoolValue;
     int64_t mIntegerValue;
     long double mFloatValue;
+    std::vector<DOMData> mArrayValue;
 };
 
 inline DOMData::DOMData()
@@ -85,6 +98,12 @@ inline DOMData::DOMData(std::string str)
 inline DOMData::DOMData(bool f)
 {
     setBool(f);
+}
+
+inline DOMData::DOMData(std::initializer_list<DOMData> l)
+    : mValueFlag(Array)
+    , mArrayValue(l)
+{
 }
 
 inline bool DOMData::isNull() const
@@ -112,6 +131,11 @@ inline bool DOMData::isFloat() const
     return mValueFlag == Float;
 }
 
+inline bool DOMData::isArray() const
+{
+    return mValueFlag == Array;
+}
+
 inline std::string DOMData::getString() const
 {
     assert(isString());
@@ -134,6 +158,18 @@ inline long double DOMData::getFloat() const
 {
     assert(isFloat());
     return mFloatValue;
+}
+
+inline std::size_t DOMData::size() const
+{
+    assert(isArray());
+    return mArrayValue.size();
+}
+
+inline const DOMData& DOMData::operator[](std::size_t idx) const
+{
+    assert(isArray());
+    return mArrayValue[idx];
 }
 
 inline void DOMData::setString(std::string str)
@@ -160,6 +196,20 @@ inline void DOMData::setFloat(long double d)
     mFloatValue = d;
 }
 
+inline void DOMData::setArray(std::size_t size)
+{
+    mValueFlag = Array;
+    mArrayValue.clear();
+    mArrayValue.reserve(size);
+}
+
+inline DOMData& DOMData::push()
+{
+    assert(isArray());
+    mArrayValue.push_back(DOMData());
+    return mArrayValue.back();
+}
+
 inline bool DOMData::operator==(const DOMData& data) const
 {
     if (mValueFlag != data.mValueFlag)
@@ -180,6 +230,8 @@ inline bool DOMData::operator==(const DOMData& data) const
         case Float:
             return std::abs(mFloatValue - data.mFloatValue) <=
                    std::numeric_limits<decltype(mFloatValue)>::epsilon();
+        case Array:
+            return mArrayValue == data.mArrayValue;
     }
     return false;
 }

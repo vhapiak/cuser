@@ -9,6 +9,9 @@ namespace cuser {
 template <>
 class OutDOM<test::DOMData>
 {
+public: // types
+    using Item = OutDOM<test::DOMData>;
+
 public: // methods
     OutDOM(test::DOMData& data);
 
@@ -24,6 +27,9 @@ public: // methods
     template <typename Float>
     typename std::enable_if<std::is_floating_point<Float>::value>::type
     setValue(Float f);
+
+    void setArray(std::size_t size);
+    Item push();
 
 private: // fields
     test::DOMData& mData;
@@ -58,6 +64,16 @@ inline typename std::enable_if<std::is_floating_point<Float>::value>::type
 OutDOM<test::DOMData>::setValue(Float f)
 {
     mData.setFloat(f);
+}
+
+inline void OutDOM<test::DOMData>::setArray(std::size_t size)
+{
+    mData.setArray(size);
+}
+
+inline OutDOM<test::DOMData>::Item OutDOM<test::DOMData>::push()
+{
+    return Item(mData.push());
 }
 
 } // namespace cuser

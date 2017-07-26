@@ -9,6 +9,9 @@ namespace cuser {
 template <>
 class InDOM<test::DOMData>
 {
+public: // types
+    using Item = InDOM<test::DOMData>;
+
 public: // methods
     InDOM(const test::DOMData& data);
 
@@ -17,6 +20,7 @@ public: // methods
     bool isBool() const;
     bool isInteger() const;
     bool isFloat() const;
+    bool isArray() const;
 
     void getValue(std::string& str) const;
     void getValue(bool& f) const;
@@ -30,6 +34,9 @@ public: // methods
     template <typename Float>
     typename std::enable_if<std::is_floating_point<Float>::value>::type
     getValue(Float& f) const;
+
+    std::size_t size() const;
+    Item operator[](std::size_t idx) const;
 
 private: // fields
     const test::DOMData& mData;
@@ -65,6 +72,11 @@ inline bool InDOM<test::DOMData>::isFloat() const
     return mData.isFloat();
 }
 
+inline bool InDOM<test::DOMData>::isArray() const
+{
+    return mData.isArray();
+}
+
 inline void InDOM<test::DOMData>::getValue(std::string& str) const
 {
     str = mData.getString();
@@ -89,6 +101,17 @@ inline typename std::enable_if<std::is_floating_point<Float>::value>::type
 InDOM<test::DOMData>::getValue(Float& f) const
 {
     f = static_cast<Float>(mData.getFloat());
+}
+
+inline std::size_t InDOM<test::DOMData>::size() const
+{
+    return mData.size();
+}
+
+inline InDOM<test::DOMData>::Item InDOM<test::DOMData>::operator[](
+    std::size_t idx) const
+{
+    return Item(mData[idx]);
 }
 
 } // namespace cuser

@@ -8,6 +8,8 @@ add_executable(
     testFloatSerializer.cpp
     testBoolSerializer.cpp
     testIntegerSerializer.cpp
+
+    testArraySerializer.cpp
 )
 target_link_libraries(
     ${UNIT_TESTS}
