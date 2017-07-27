@@ -3,6 +3,7 @@
 #include <cassert>
 #include <initializer_list>
 #include <limits>
+#include <map>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -12,6 +13,11 @@ namespace test {
 
 class DOMData
 {
+public: // types
+    using FieldsMap = std::map<std::string, DOMData>;
+    using Field = FieldsMap::value_type;
+    using Iterator = FieldsMap::const_iterator;
+
 public: // methods
     explicit DOMData();
     explicit DOMData(std::string str);
@@ -38,6 +44,7 @@ public: // methods
     }
 
     explicit DOMData(std::initializer_list<DOMData> l);
+    explicit DOMData(std::initializer_list<Field> f);
 
     bool isNull() const;
     bool isString() const;
@@ -45,6 +52,7 @@ public: // methods
     bool isInteger() const;
     bool isFloat() const;
     bool isArray() const;
+    bool isObject() const;
 
     std::string getString() const;
     bool getBool() const;
@@ -54,6 +62,9 @@ public: // methods
     std::size_t size() const;
     const DOMData& operator[](std::size_t idx) const;
 
+    Iterator begin() const;
+    Iterator end() const;
+
     void setString(std::string str);
     void setBool(bool f);
     void setIntger(int64_t i);
@@ -61,6 +72,9 @@ public: // methods
 
     void setArray(std::size_t size);
     DOMData& push();
+
+    void setObject();
+    DOMData& addField(std::string key);
 
     bool operator==(const DOMData& data) const;
 
@@ -73,6 +87,7 @@ private: // types
         Integer,
         Float,
         Array,
+        Object,
     };
 
 private: // fields
@@ -83,6 +98,7 @@ private: // fields
     int64_t mIntegerValue;
     long double mFloatValue;
     std::vector<DOMData> mArrayValue;
+    FieldsMap mObjectValue;
 };
 
 inline DOMData::DOMData()
@@ -103,6 +119,12 @@ inline DOMData::DOMData(bool f)
 inline DOMData::DOMData(std::initializer_list<DOMData> l)
     : mValueFlag(Array)
     , mArrayValue(l)
+{
+}
+
+inline DOMData::DOMData(std::initializer_list<Field> f)
+    : mValueFlag(Object)
+    , mObjectValue(f)
 {
 }
 
@@ -134,6 +156,11 @@ inline bool DOMData::isFloat() const
 inline bool DOMData::isArray() const
 {
     return mValueFlag == Array;
+}
+
+inline bool DOMData::isObject() const
+{
+    return mValueFlag == Object;
 }
 
 inline std::string DOMData::getString() const
@@ -170,6 +197,18 @@ inline const DOMData& DOMData::operator[](std::size_t idx) const
 {
     assert(isArray());
     return mArrayValue[idx];
+}
+
+inline DOMData::Iterator DOMData::begin() const
+{
+    assert(isObject());
+    return mObjectValue.begin();
+}
+
+inline DOMData::Iterator DOMData::end() const
+{
+    assert(isObject());
+    return mObjectValue.end();
 }
 
 inline void DOMData::setString(std::string str)
@@ -210,6 +249,18 @@ inline DOMData& DOMData::push()
     return mArrayValue.back();
 }
 
+inline void DOMData::setObject()
+{
+    mValueFlag = Object;
+}
+
+inline DOMData& DOMData::addField(std::string key)
+{
+    assert(isObject());
+    mObjectValue.insert({key, DOMData()});
+    return mObjectValue.at(key);
+}
+
 inline bool DOMData::operator==(const DOMData& data) const
 {
     if (mValueFlag != data.mValueFlag)
@@ -232,6 +283,8 @@ inline bool DOMData::operator==(const DOMData& data) const
                    std::numeric_limits<decltype(mFloatValue)>::epsilon();
         case Array:
             return mArrayValue == data.mArrayValue;
+        case Object:
+            return mObjectValue == data.mObjectValue;
     }
     return false;
 }

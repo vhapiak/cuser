@@ -10,6 +10,7 @@ add_executable(
     testIntegerSerializer.cpp
 
     testArraySerializer.cpp
+    testMapSerializer.cpp
 )
 target_link_libraries(
     ${UNIT_TESTS}

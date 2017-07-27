@@ -11,6 +11,20 @@ class InDOM
 public: // types
     using Item = InDOM<Document>;
 
+    class Field
+    {
+    public:
+        const std::string& getKey() const;
+        Item getValue() const;
+    };
+
+    struct Iterator
+    {
+        bool operator!=(const Iterator&) const;
+        Iterator& operator++() const;
+        const Field& operator*() const;
+    };
+
 public: // methods
     InDOM(const Document& doc);
 
@@ -20,6 +34,7 @@ public: // methods
     bool isInteger() const;
     bool isFloat() const;
     bool isArray() const;
+    bool isObject() const;
 
     void getValue(std::string& str) const;
 
@@ -29,6 +44,9 @@ public: // methods
 
     std::size_t size() const;
     Item operator[](std::size_t idx) const;
+
+    Iterator begin() const;
+    Iterator end() const;
 };
 
 template <typename Document>
@@ -47,6 +65,9 @@ public: // methods
 
     void setArray(std::size_t size);
     Item push();
+
+    void setObject();
+    Item addField(std::string key);
 };
 
 } // namespace cuser

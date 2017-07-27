@@ -31,6 +31,9 @@ public: // methods
     void setArray(std::size_t size);
     Item push();
 
+    void setObject();
+    Item addField(std::string key);
+
 private: // fields
     test::DOMData& mData;
 };
@@ -74,6 +77,17 @@ inline void OutDOM<test::DOMData>::setArray(std::size_t size)
 inline OutDOM<test::DOMData>::Item OutDOM<test::DOMData>::push()
 {
     return Item(mData.push());
+}
+
+inline void OutDOM<test::DOMData>::setObject()
+{
+    mData.setObject();
+}
+
+inline OutDOM<test::DOMData>::Item OutDOM<test::DOMData>::addField(
+    std::string key)
+{
+    return Item(mData.addField(std::move(key)));
 }
 
 } // namespace cuser
