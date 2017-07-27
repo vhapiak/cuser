@@ -25,9 +25,45 @@ TEST(ArraySerializerTest, serializeBoolArray)
 
     bool output[3];
     serializer.read(data, output);
-    EXPECT_EQ(input[0], output[0]);
-    EXPECT_EQ(input[1], output[1]);
-    EXPECT_EQ(input[2], output[2]);
+    for (std::size_t i = 0; i < std::extent<decltype(output)>::value; ++i)
+    {
+        EXPECT_EQ(input[i], output[i]);
+    }
+}
+
+TEST(ArraySerializerTest, serializeMultiArray)
+{
+    const bool input[3][3] = {
+        {true, false, true},
+        {false, true, false},
+        {true, true, true},
+    };
+    const test::DOMData expectedData({
+        test::DOMData{
+            test::DOMData(true), test::DOMData(false), test::DOMData(true)},
+        test::DOMData{
+            test::DOMData(false), test::DOMData(true), test::DOMData(false)},
+        test::DOMData{
+            test::DOMData(true), test::DOMData(true), test::DOMData(true)},
+    });
+
+    detail::Serializer<detail::BoolSerializer, detail::ArraySerializer>
+        serializer;
+
+    test::DOMData data;
+    serializer.write(input, data);
+    EXPECT_EQ(expectedData, data);
+
+    bool output[3][3];
+    serializer.read(data, output);
+    for (std::size_t i = 0; i < std::extent<decltype(output)>::value; ++i)
+    {
+        for (std::size_t j = 0; j < std::extent<decltype(output), 1>::value;
+             ++j)
+        {
+            EXPECT_EQ(input[i][j], output[i][j]);
+        }
+    }
 }
 
 TEST(ArraySerializerTest, deserializeNull)
