@@ -1,0 +1,31 @@
+language:
+    - cpp
+compiler:
+    - gcc
+
+before_install:
+    - pip install --user cpp-coveralls    
+    - wget https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
+    - tar -xf cmake-3.5.2-Linux-x86_64.tar.gz
+    - sudo cp -r cmake-3.5.2-Linux-x86_64/bin/* /usr/local/bin/
+    - sudo cp -r cmake-3.5.2-Linux-x86_64/share/* /usr/local/share/
+    - wget https://github.com/google/googletest/archive/release-1.8.0.tar.gz
+    - tar -xf release-1.8.0.tar.gz
+    - cd googletest-release-1.8.0
+    - mkdir build && cd build
+    - cmake ..
+    - make
+    - sudo make install
+    - cd ../..
+
+script:
+    - mkdir build && cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O0 --coverage"
+    - make
+    - ./test/unit_tests
+
+after_success:
+    - python ../coveralls.py ../
+
+notifications:
+    email: false
