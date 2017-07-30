@@ -4,6 +4,7 @@
 
 #include "cuser/DOM.hpp"
 #include "cuser/utils/LastIndexOf.hpp"
+#include "cuser/utils/GetArgByType.hpp"
 
 namespace cuser {
 namespace detail {
@@ -12,6 +13,9 @@ template <typename... Serializers>
 class Serializer
 {
 public: // methods
+    template <typename... Args>
+    Serializer(Args&&... args);
+
     template <typename Document, typename Data>
     void read(const InDOM<Document>& input, Data& output) const;
 
@@ -39,6 +43,14 @@ public: // methods
 private: // fields
     std::tuple<Serializers...> mSerializers;
 };
+
+template <typename... Serializers>
+template <typename... Args>
+Serializer<Serializers...>::Serializer(Args&&... args)
+    : mSerializers(
+          GetArgByType<Serializers>::get(std::forward<Args>(args)...)...)
+{
+}
 
 template <typename... Serializers>
 template <typename Document, typename Data>

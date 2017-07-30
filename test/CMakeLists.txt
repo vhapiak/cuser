@@ -3,6 +3,7 @@ add_executable(
     ${UNIT_TESTS}
     testLastIndexOf.cpp
     testHasStreamOperators.cpp
+    testGetArgByType.cpp
 
     testIOStreamSerializer.cpp
     testFloatSerializer.cpp
@@ -14,6 +15,7 @@ add_executable(
     testVectorSerializer.cpp
 
     testDefaultSerializer.cpp
+    testCustomSerializer.cpp
 )
 target_link_libraries(
     ${UNIT_TESTS}

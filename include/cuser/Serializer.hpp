@@ -10,9 +10,9 @@ using Serializer =
     detail::Serializer<detail::DefaultSerializer, Serializers...>;
 
 template <typename... Serializers>
-Serializer<Serializers...> makeSerializer(Serializers&&... /*args*/)
+Serializer<Serializers...> makeSerializer(Serializers&&... args)
 {
-    return Serializer<Serializers...>();
+    return Serializer<Serializers...>(std::forward<Serializers...>(args)...);
 }
 
 } // namespace cuser
