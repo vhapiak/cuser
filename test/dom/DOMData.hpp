@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <cmath>
 #include <initializer_list>
 #include <limits>
 #include <map>
@@ -279,7 +280,7 @@ inline bool DOMData::operator==(const DOMData& data) const
         case Integer:
             return mIntegerValue == data.mIntegerValue;
         case Float:
-            return std::abs(mFloatValue - data.mFloatValue) <=
+            return std::fabs(mFloatValue - data.mFloatValue) <=
                    std::numeric_limits<decltype(mFloatValue)>::epsilon();
         case Array:
             return mArrayValue == data.mArrayValue;
