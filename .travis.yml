@@ -17,10 +17,16 @@ before_install:
     - make
     - sudo make install
     - cd ../..
+    - git clone https://github.com/nlohmann/json.git
+    - cd json
+    - mkdir build && cd build
+    - cmake .. -DJSON_BuildTests=OFF
+    - sudo make install
+    - cd ../..
 
 script:
     - mkdir build && cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O0 --coverage"
+    - cmake .. -DBUILD_WITH_NLOHMANN_JSON=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O0 --coverage"
     - make
     - ./test/unit_tests
 

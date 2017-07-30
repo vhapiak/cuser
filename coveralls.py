@@ -36,7 +36,7 @@ def parse_file(file):
 
         coveralls_request['source_files'].append({'name': rel_path, 'source_digest': md5, 'coverage': coverage})
 
-gcov_cmd = ['gcov', '-d']
+gcov_cmd = ['gcov', '-p']
 for root, dirs, files in os.walk('.'):
     for file in fnmatch.filter(files, '*.o'):
         full_path = os.path.join(root, file)
