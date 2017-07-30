@@ -15,9 +15,8 @@ struct IsVector : std::false_type
 {
 };
 
-template <template <typename...> class Tmpl, typename Value, typename... Args>
-struct IsVector<Tmpl<Value, Args...>>
-    : std::is_same<std::vector<Value, Args...>, Tmpl<Value, Args...>>
+template <typename... Args>
+struct IsVector<std::vector<Args...>> : std::true_type
 {
 };
 

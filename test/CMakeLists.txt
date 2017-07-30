@@ -12,6 +12,8 @@ add_executable(
     testArraySerializer.cpp
     testMapSerializer.cpp
     testVectorSerializer.cpp
+
+    testDefaultSerializer.cpp
 )
 target_link_libraries(
     ${UNIT_TESTS}

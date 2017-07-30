@@ -33,11 +33,7 @@ TEST(VectorSerializerTest, serializeBoolVector)
 
     std::vector<bool> output;
     serializer.read(data, output);
-    EXPECT_EQ(input.size(), output.size());
-    for (std::size_t i = 0; i < output.size(); ++i)
-    {
-        EXPECT_EQ(input[i], output[i]);
-    }
+    EXPECT_EQ(input, output);
 }
 
 TEST(VectorSerializerTest, serializeNestedVectors)
@@ -63,15 +59,7 @@ TEST(VectorSerializerTest, serializeNestedVectors)
 
     std::vector<std::vector<bool>> output;
     serializer.read(data, output);
-    EXPECT_EQ(input.size(), output.size());
-    for (std::size_t i = 0; i < input.size(); ++i)
-    {
-        EXPECT_EQ(input[i].size(), output[i].size());
-        for (std::size_t j = 0; j < input[i].size(); ++j)
-        {
-            EXPECT_EQ(input[i][j], output[i][j]);
-        }
-    }
+    EXPECT_EQ(input, output);
 }
 
 TEST(VectorSerializerTest, deserializeNull)

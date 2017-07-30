@@ -16,13 +16,11 @@ struct IsMap : std::false_type
 {
 };
 
-template <template <typename...> class Tmpl, typename Key, typename... Args>
-struct IsMap<Tmpl<Key, Args...>>
+template <typename Key, typename... Args>
+struct IsMap<std::map<Key, Args...>>
     : std::integral_constant<
           bool,
-          std::is_same<std::map<Key, Args...>, Tmpl<Key, Args...>>::value &&
-              (HasOstreamOperator<Key>::value ||
-               HasIstreamOperator<Key>::value)>
+          HasOstreamOperator<Key>::value || HasIstreamOperator<Key>::value>
 {
 };
 
