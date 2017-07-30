@@ -4,6 +4,7 @@ add_executable(
     testLastIndexOf.cpp
     testHasStreamOperators.cpp
     testGetArgByType.cpp
+    testIndexOfType.cpp
 
     testIOStreamSerializer.cpp
     testFloatSerializer.cpp

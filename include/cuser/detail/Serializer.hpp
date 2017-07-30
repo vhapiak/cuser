@@ -3,8 +3,9 @@
 #include <tuple>
 
 #include "cuser/DOM.hpp"
-#include "cuser/utils/LastIndexOf.hpp"
 #include "cuser/utils/GetArgByType.hpp"
+#include "cuser/utils/IndexOfType.hpp"
+#include "cuser/utils/LastIndexOf.hpp"
 
 namespace cuser {
 namespace detail {
@@ -15,6 +16,9 @@ class Serializer
 public: // methods
     template <typename... Args>
     Serializer(Args&&... args);
+
+    template <typename S>
+    S& get();
 
     template <typename Document, typename Data>
     void read(const InDOM<Document>& input, Data& output) const;
@@ -50,6 +54,16 @@ Serializer<Serializers...>::Serializer(Args&&... args)
     : mSerializers(
           GetArgByType<Serializers>::get(std::forward<Args>(args)...)...)
 {
+}
+
+template <typename... Serializers>
+template <typename S>
+S& Serializer<Serializers...>::get()
+{
+    constexpr std::size_t idx = IndexOfType<S, Serializers...>::value;
+    static_assert(idx < sizeof...(Serializers), "Serializer not found");
+
+    return std::get<idx>(mSerializers);
 }
 
 template <typename... Serializers>

@@ -34,7 +34,6 @@ struct FormatSerializer
         cuser::OutDOM<Document>& output,
         const Serializer& serializer) const;
 
-private: //
     bool mToText;
 };
 
@@ -130,4 +129,22 @@ TEST(CustomSerializerTest, serializeFormatToInt)
     Format output;
     serializer.read(data, output);
     EXPECT_EQ(input, output);
+}
+
+TEST(CustomSerializerTest, serializeWithDynamicChange)
+{
+    const Format input = Format::Rgb;
+    const test::DOMData expectedIntData(1u);
+    const test::DOMData expectedStrData(std::string("Rgb"));
+
+    auto serializer = makeSerializer(FormatSerializer{false});
+
+    test::DOMData intData;
+    serializer.write(input, intData);
+    EXPECT_EQ(expectedIntData, intData);
+
+    serializer.get<FormatSerializer>().mToText = true;
+    test::DOMData strData;
+    serializer.write(input, strData);
+    EXPECT_EQ(expectedStrData, strData);
 }
