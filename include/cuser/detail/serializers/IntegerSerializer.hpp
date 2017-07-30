@@ -14,7 +14,7 @@ public: // types
     template <typename T>
     using IsSupported = std::integral_constant<
         bool,
-        std::is_integral<T>::value || !std::is_same<bool, T>::value>;
+        std::is_integral<T>::value && !std::is_same<bool, T>::value>;
 
 public: // methods
     template <typename Document, typename Data, typename Serializer>

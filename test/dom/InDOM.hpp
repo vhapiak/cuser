@@ -20,7 +20,7 @@ public: // types
     public: // methods
         Field(const Value& value);
 
-        const std::string& getKey() const;
+        std::string getKey() const;
         Item getValue() const;
 
     private: // fields
@@ -169,7 +169,7 @@ inline InDOM<test::DOMData>::Field::Field(const Value& value)
 {
 }
 
-inline const std::string& InDOM<test::DOMData>::Field::getKey() const
+inline std::string InDOM<test::DOMData>::Field::getKey() const
 {
     return mValue.first;
 }

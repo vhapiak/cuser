@@ -14,7 +14,7 @@ public: // types
     class Field
     {
     public:
-        const std::string& getKey() const;
+        std::string getKey() const;
         Item getValue() const;
     };
 
