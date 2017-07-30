@@ -1,10 +1,23 @@
 language:
     - cpp
 compiler:
-    - gcc
+    - gcc-5
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
 before_install:
-    - pip install --user cpp-coveralls    
+    - eval "${MATRIX_EVAL}"
+    - pip install --user cpp-coveralls
     - wget https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
     - tar -xf cmake-3.5.2-Linux-x86_64.tar.gz
     - sudo cp -r cmake-3.5.2-Linux-x86_64/bin/* /usr/local/bin/
