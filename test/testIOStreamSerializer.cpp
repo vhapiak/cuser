@@ -88,7 +88,7 @@ TEST(IOStreamSerializerTest, deserializeNull)
 TEST(IOStreamSerializerTest, deserializeTrash)
 {
     detail::Serializer<detail::IOStreamSerializer> serializer;
-    test::DOMData data("ffaabbcc");
+    test::DOMData data(std::string("ffaabbcc"));
     Color output;
     EXPECT_THROW(serializer.read(data, output), cuser::SerializerException);
 }
