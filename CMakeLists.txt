@@ -9,6 +9,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 if (BUILD_WITH_NLOHMANN_JSON)
     find_package(nlohmann_json REQUIRED)
+    message(STATUS "nlohman json: ${JSON_INCLUDE_DIR}")
 endif()
 
 add_library(${CUSER} INTERFACE)

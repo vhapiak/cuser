@@ -32,15 +32,16 @@ before_install:
     - cd ../..
     - git clone https://github.com/nlohmann/json.git
     - cd json
+    - git checkout v2.1.1
     - mkdir build && cd build
-    - cmake .. -DJSON_BuildTests=OFF
+    - cmake .. -DBuildTests=OFF
     - sudo make install
     - cd ../..
 
 script:
     - mkdir build && cd build
     - cmake .. -DBUILD_WITH_NLOHMANN_JSON=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O0 --coverage"
-    - make
+    - make 
     - ./test/unit_tests
 
 after_success:
